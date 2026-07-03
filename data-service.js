@@ -7,9 +7,9 @@ const BadmintonData = (() => {
     return Boolean(config.SUPABASE_URL && config.SUPABASE_ANON_KEY);
   }
 
-  function endpoint() {
+  function endpoint(query = "") {
     const table = config.SUBMISSIONS_TABLE || "badminton_submissions";
-    return `${config.SUPABASE_URL.replace(/\/$/, "")}/rest/v1/${table}`;
+    return `${config.SUPABASE_URL.replace(/\/$/, "")}/rest/v1/${table}${query}`;
   }
 
   function headers(extra = {}) {
@@ -54,6 +54,15 @@ const BadmintonData = (() => {
     return rows[0];
   }
 
+  async function loadQuestionnaireConfig(fallbackSchema) {
+    if (!isSupabaseConfigured()) return fallbackSchema;
+    const query = "?select=answers,created_at&questionnaire_version=eq.questionnaire_config&order=created_at.desc&limit=1";
+    const response = await fetch(endpoint(query), { headers: headers() });
+    if (!response.ok) throw new Error(await response.text());
+    const rows = await response.json();
+    return rows[0]?.answers?.schema || fallbackSchema;
+  }
+
   function escapeHtml(value) {
     return String(value ?? "")
       .replaceAll("&", "&amp;")
@@ -63,5 +72,5 @@ const BadmintonData = (() => {
       .replaceAll("'", "&#039;");
   }
 
-  return { OTHER_VALUE, createSubmission, escapeHtml, isSupabaseConfigured, uid };
+  return { OTHER_VALUE, createSubmission, escapeHtml, isSupabaseConfigured, loadQuestionnaireConfig, uid };
 })();
