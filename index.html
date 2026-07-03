@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Badminton Feedback Questionnaire</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="siteHeader">
+    <div>
+      <p class="eyebrow" data-i18n="eyebrow">Badminton test feedback</p>
+      <h1 data-i18n="heading">Questionnaire</h1>
+    </div>
+    <button id="languageToggle" class="secondary" type="button">中文</button>
+  </header>
+
+  <main class="page">
+    <section class="panel introPanel">
+      <div>
+        <h2 data-i18n="formTitle">Badminton testing feedback</h2>
+        <p class="muted" data-i18n="intro">Please answer the following questions based on your testing experience. Required questions are marked with an asterisk.</p>
+      </div>
+      <span class="pill" id="questionCount"></span>
+    </section>
+
+    <section class="panel">
+      <form id="clientForm" class="form"></form>
+    </section>
+  </main>
+
+  <div id="successModal" class="modalOverlay" role="dialog" aria-modal="true">
+    <div class="modal">
+      <h2 data-i18n="successTitle">Thank you</h2>
+      <p data-i18n="successText">Your questionnaire has been submitted successfully.</p>
+      <button id="closeSuccessModal" type="button" data-i18n="close">Close</button>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="config.js"></script>
+  <script src="schema.js"></script>
+  <script src="data-service.js"></script>
+  <script src="client.js"></script>
+</body>
+</html>
