@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Client Questionnaire QR Code</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="sharePage">
+    <section class="panel sharePanel">
+      <p class="eyebrow">Client access</p>
+      <h1>Questionnaire QR code</h1>
+      <p class="muted">Print or display this QR code after the client site is deployed online.</p>
+      <img id="qrImage" class="qrImage" alt="Client questionnaire QR code" />
+      <input id="clientUrl" readonly />
+      <a class="button" href="index.html">Open questionnaire</a>
+    </section>
+  </main>
+  <script>
+    const url = new URL("index.html", window.location.href).href;
+    document.querySelector("#clientUrl").value = url;
+    document.querySelector("#qrImage").src = `https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=${encodeURIComponent(url)}`;
+  </script>
+</body>
+</html>
