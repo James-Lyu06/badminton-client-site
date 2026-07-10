@@ -1,49 +1,14 @@
-# AuraSense Feedback Sites
+# Badminton Client Site
 
-This prototype has been rebuilt as two independent website entries:
+Public questionnaire site for badminton test participants.
 
-- `client/index.html` is the client/tester questionnaire site.
-- `admin/index.html` is the internal research dashboard.
+## Deploy
 
-The client site no longer shows the sample motion report, score, session summary, or report explanation. It only shows questions and answer controls.
+1. Upload these files to the repository root.
+2. Enable GitHub Pages from `main` / root.
+3. Open `share.html` to get the QR code for the client questionnaire.
 
-The research dashboard supports:
+## Database
 
-- Online response review without exporting first
-- Search and level filtering
-- Summary stats
-- Open-text answer review
-- A local AI-style summary draft for subjective answers
-- Questionnaire editing
-- Questions with fixed options plus an "Other" free-text answer
-
-## How to run
-
-Open `index.html` directly in a browser, or serve the folder locally and open:
-
-```text
-http://localhost:8000/client/
-http://localhost:8000/admin/
-```
-
-## Free Netlify production URLs
-
-For the current free Netlify deployment, use these two paths:
-
-```text
-https://aurasense-feedback.netlify.app/client/
-https://aurasense-feedback.netlify.app/admin/
-```
-
-Keeping both entries under the same Netlify domain is important while this prototype still shares data through browser localStorage.
-
-## Important limitation
-
-This demo still uses browser `localStorage`. It works for a local prototype because both sites share the same origin. If the client and admin sites are deployed as separate domains, they will need a shared backend such as Supabase, Firebase, or a custom API.
-
-For production, add:
-
-- Database storage for submissions
-- Admin authentication
-- Privacy consent before collecting contact details
-- A real AI summarization API for subjective answers
+This site submits to Supabase when `config.js` contains `SUPABASE_URL` and `SUPABASE_ANON_KEY`.
+If those values are blank, it runs in local demo mode only.
