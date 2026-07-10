@@ -3,45 +3,32 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Badminton Feedback Questionnaire</title>
-  <link rel="stylesheet" href="styles.css" />
+  <title>AuraSense Feedback Sites</title>
+  <link rel="stylesheet" href="shared/styles.css" />
 </head>
-<body>
-  <header class="siteHeader">
-    <div>
-      <p class="eyebrow" data-i18n="eyebrow">Badminton test feedback</p>
-      <h1 data-i18n="heading">Questionnaire</h1>
+<body class="gateway">
+  <main class="gatewayLayout">
+    <p class="eyebrow">AuraSense Badminton Study</p>
+    <h1>AuraSense Feedback Sites</h1>
+    <p class="muted">The prototype is now split into two independent website entries.</p>
+    <div class="gatewayActions">
+      <a class="button" href="client/index.html">Client questionnaire</a>
+      <a class="button secondary" href="admin/index.html">Research dashboard</a>
     </div>
-    <button id="languageToggle" class="secondary" type="button">中文</button>
-  </header>
-
-  <main class="page">
-    <section class="panel introPanel">
+    <section class="panel qrPanel">
       <div>
-        <h2 data-i18n="formTitle">Badminton testing feedback</h2>
-        <p class="muted" data-i18n="intro">Please answer the following questions based on your testing experience. Required questions are marked with an asterisk.</p>
+        <p class="eyebrow">Client access</p>
+        <h2>Questionnaire QR code</h2>
+        <p class="muted small">Use this after the site is hosted. The QR code points directly to the client questionnaire page.</p>
+        <input id="clientUrlInput" class="urlInput" readonly />
       </div>
-      <span class="pill" id="questionCount"></span>
-    </section>
-
-    <section class="panel">
-      <form id="clientForm" class="form"></form>
+      <img id="clientQr" class="qrImage" alt="Client questionnaire QR code" />
     </section>
   </main>
-
-  <div id="successModal" class="modalOverlay" role="dialog" aria-modal="true">
-    <div class="modal">
-      <h2 data-i18n="successTitle">Thank you</h2>
-      <p data-i18n="successText">Your questionnaire has been submitted successfully.</p>
-      <button id="closeSuccessModal" type="button" data-i18n="close">Close</button>
-    </div>
-  </div>
-
-  <div id="toast" class="toast" role="status" aria-live="polite"></div>
-
-  <script src="config.js"></script>
-  <script src="schema.js"></script>
-  <script src="data-service.js"></script>
-  <script src="client.js"></script>
+  <script>
+    const clientUrl = new URL("client/index.html", window.location.href).href;
+    document.querySelector("#clientUrlInput").value = clientUrl;
+    document.querySelector("#clientQr").src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(clientUrl)}`;
+  </script>
 </body>
 </html>
