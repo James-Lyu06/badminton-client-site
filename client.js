@@ -165,6 +165,13 @@ function renderClientForm() {
     const section = document.createElement("section");
     section.className = "formSection";
     section.innerHTML = `<h3>${BadmintonData.escapeHtml(trSection(sectionName))}</h3>`;
+    const sectionDescription = schema.sectionDescriptions?.[sectionName];
+    if (sectionDescription) {
+      const description = document.createElement("p");
+      description.className = "sectionDescription";
+      description.textContent = sectionDescription;
+      section.appendChild(description);
+    }
     questions.forEach(question => section.appendChild(renderQuestion(question)));
     clientForm.appendChild(section);
   });
@@ -179,6 +186,12 @@ function renderQuestion(question) {
   wrapper.className = "formGroup";
   const required = question.required ? `<span class="required">*</span>` : "";
   wrapper.innerHTML = `<label class="questionLabel">${BadmintonData.escapeHtml(trQuestion(question))} ${required}</label><p class="questionMeta">${BadmintonData.escapeHtml(questionTypeHint(question))}</p>`;
+  if (question.description) {
+    const description = document.createElement("p");
+    description.className = "questionDescription";
+    description.textContent = question.description;
+    wrapper.appendChild(description);
+  }
 
   if (question.type === "short_text") wrapper.appendChild(inputElement("text", question));
   if (question.type === "long_text") wrapper.appendChild(textareaElement(question));
@@ -302,3 +315,4 @@ languageToggle.addEventListener("click", () => {
 });
 
 renderClientForm();
+
