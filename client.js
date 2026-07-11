@@ -2,6 +2,25 @@ const schema = window.BADMINTON_SCHEMA;
 const clientForm = document.querySelector("#clientForm");
 const toast = document.querySelector("#toast");
 const successModal = document.querySelector("#successModal");
+const languageToggle = document.querySelector("#languageToggle");
+let currentLang = localStorage.getItem("badminton_client_lang") || "en";
+
+function tr(value) {
+  return currentLang === "zh" ? (window.BADMINTON_ZH[value] || value) : value;
+}
+
+function renderStaticText() {
+  document.documentElement.lang = currentLang === "zh" ? "zh-CN" : "en";
+  document.title = tr("Badminton Motion-Analysis Product Survey");
+  document.querySelector("#eyebrow").textContent = tr("Badminton research survey");
+  document.querySelector("#pageHeading").textContent = tr("Badminton Motion-Analysis Product Survey");
+  document.querySelector("#formHeading").textContent = tr("Questionnaire");
+  document.querySelector("#formIntro").textContent = tr("Please answer the following questions based on your badminton experience. Required questions are marked with an asterisk.");
+  document.querySelector("#successHeading").textContent = tr("Thank you");
+  document.querySelector("#successText").textContent = tr("Your questionnaire has been submitted successfully.");
+  document.querySelector("#closeSuccessModal").textContent = tr("Close");
+  languageToggle.textContent = currentLang === "zh" ? "EN" : "中文";
+}
 
 function showToast(message) {
   toast.textContent = message;
@@ -18,7 +37,8 @@ function groupBySection(questions) {
 }
 
 function renderClientForm() {
-  document.querySelector("#questionCount").textContent = `${schema.questions.length} questions`;
+  renderStaticText();
+  document.querySelector("#questionCount").textContent = currentLang === "zh" ? `${schema.questions.length} ${tr("questions")}` : `${schema.questions.length} questions`;
   clientForm.innerHTML = "";
 
   Object.entries(groupBySection(schema.questions)).forEach(([sectionName, questions]) => {
@@ -26,7 +46,7 @@ function renderClientForm() {
     section.className = "formSection";
 
     const heading = document.createElement("h3");
-    heading.textContent = sectionName;
+    heading.textContent = tr(sectionName);
     section.appendChild(heading);
 
     const concept = schema.sectionDescriptions?.[sectionName];
@@ -34,9 +54,9 @@ function renderClientForm() {
       const description = document.createElement("div");
       description.className = "sectionDescription";
       const title = document.createElement("strong");
-      title.textContent = concept.title;
+      title.textContent = tr(concept.title);
       const text = document.createElement("p");
-      text.textContent = concept.text;
+      text.textContent = tr(concept.text);
       description.append(title, text);
       section.appendChild(description);
     }
@@ -47,7 +67,7 @@ function renderClientForm() {
 
   const submit = document.createElement("button");
   submit.type = "submit";
-  submit.textContent = "Submit answers";
+  submit.textContent = tr("Submit answers");
   clientForm.appendChild(submit);
   updateConditionalQuestions();
 }
@@ -60,7 +80,7 @@ function renderQuestion(question) {
 
   const label = document.createElement("label");
   label.className = "questionLabel";
-  label.textContent = question.label;
+  label.textContent = tr(question.label);
   if (question.required) {
     const required = document.createElement("span");
     required.className = "required";
@@ -77,7 +97,7 @@ function renderQuestion(question) {
   if (question.description) {
     const description = document.createElement("p");
     description.className = "questionDescription";
-    description.textContent = question.description;
+    description.textContent = tr(question.description);
     wrapper.appendChild(description);
   }
 
@@ -95,8 +115,8 @@ function renderQuestion(question) {
     const grid = document.createElement("div");
     grid.className = "contactGrid";
     grid.append(
-      inputElement("text", `${question.id}_name`, "Name / nickname"),
-      inputElement("text", `${question.id}_contact`, "Email / WeChat / phone")
+      inputElement("text", `${question.id}_name`, tr("Name / nickname")),
+      inputElement("text", `${question.id}_contact`, tr("Email / WeChat / phone"))
     );
     wrapper.appendChild(grid);
   }
@@ -110,7 +130,7 @@ function questionTypeHint(question) {
     long_text: "Written answer",
     contact: "Optional written answer"
   };
-  return hints[question.type] || "Answer";
+  return tr(hints[question.type] || "Answer");
 }
 
 function inputElement(type, name, placeholder = "") {
@@ -135,7 +155,7 @@ function choiceElement(type, question, option) {
   input.value = option;
   input.required = type === "radio" && question.required;
   if (question.id === "follow_up_willingness") input.addEventListener("change", updateConditionalQuestions);
-  label.append(input, document.createTextNode(option));
+  label.append(input, document.createTextNode(tr(option)));
   return label;
 }
 
@@ -145,9 +165,9 @@ function inlineTextChoiceElement(question) {
   const checkbox = inputElement("checkbox", question.id);
   checkbox.value = "__INLINE_TEXT__";
   const caption = document.createElement("span");
-  caption.textContent = question.inlineTextOption;
+  caption.textContent = tr(question.inlineTextOption);
   const text = inputElement("text", `${question.id}_inline`);
-  text.setAttribute("aria-label", question.inlineTextOption);
+  text.setAttribute("aria-label", tr(question.inlineTextOption));
   text.addEventListener("input", () => { if (text.value.trim()) checkbox.checked = true; });
   label.append(checkbox, caption, text);
   return label;
@@ -159,7 +179,7 @@ function otherChoiceElement(type, question) {
   const input = inputElement(type, question.id);
   input.value = BadmintonData.OTHER_VALUE;
   input.required = type === "radio" && question.required;
-  const text = inputElement("text", `${question.id}_other`, "Other: ______");
+  const text = inputElement("text", `${question.id}_other`, tr("Other: ______"));
   text.addEventListener("input", () => { if (text.value.trim()) input.checked = true; });
   label.append(input, text);
   return label;
@@ -208,19 +228,24 @@ clientForm.addEventListener("submit", async event => {
       id: BadmintonData.uid(),
       createdAt: new Date().toISOString(),
       questionnaireVersion: schema.version,
-      language: "en",
+      language: currentLang,
       answers: collectAnswers()
     });
     clientForm.reset();
     updateConditionalQuestions();
     successModal.classList.add("show");
-    showToast("Submitted successfully.");
+    showToast(tr("Submitted successfully."));
   } catch (error) {
     console.error(error);
-    showToast("Submission failed. Please tell the researcher.");
+    showToast(tr("Submission failed. Please tell the researcher."));
   }
 });
 
 document.querySelector("#closeSuccessModal").addEventListener("click", () => successModal.classList.remove("show"));
+languageToggle.addEventListener("click", () => {
+  currentLang = currentLang === "en" ? "zh" : "en";
+  localStorage.setItem("badminton_client_lang", currentLang);
+  renderClientForm();
+});
 renderClientForm();
 
