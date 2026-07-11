@@ -100,3 +100,18 @@ textarea { min-height: 96px; resize: vertical; }
   .page { padding: 16px; }
   .siteHeader { padding: 20px 16px; }
 }
+.sectionDescription {
+  margin: 0 0 20px;
+  padding: 16px;
+  border-left: 4px solid #2348ff;
+  background: #f4f7ff;
+  line-height: 1.6;
+}
+
+.questionDescription {
+  margin: 6px 0 12px;
+  color: #667085;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
