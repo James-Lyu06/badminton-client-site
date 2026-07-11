@@ -107,6 +107,8 @@ textarea { min-height: 96px; resize: vertical; }
   background: #f4f7ff;
   line-height: 1.6;
 }
+.sectionDescription strong { display: block; margin-bottom: 8px; }
+.sectionDescription p { margin: 0; }
 
 .questionDescription {
   margin: 6px 0 12px;
@@ -114,4 +116,6 @@ textarea { min-height: 96px; resize: vertical; }
   font-size: 0.9rem;
   line-height: 1.5;
 }
+[hidden] { display: none !important; }
+.otherChoice span { flex: 0 0 auto; }
 
