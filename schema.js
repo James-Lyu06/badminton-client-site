@@ -2,7 +2,10 @@ window.BADMINTON_SCHEMA = {
   title: "Badminton Motion-Analysis Product Survey",
   version: "2026-07-11-product-survey",
   sectionDescriptions: {
-    "Section 4: Product Concept Interest": "Our idea is to use a wearable motion sensor attached to the elbow to analyze your badminton performance. The system may compare your movement with skilled players and provide feedback such as technique scores, consistency, wrist speed, and training suggestions."
+    "Section 4: Product Concept Interest": {
+      title: "Product Concept",
+      text: "Our idea is to use a wearable motion sensor attached to the elbow to analyze your badminton performance. The system may compare your movement with skilled players and provide feedback such as technique scores, consistency, wrist speed, and training suggestions."
+    }
   },
   questions: [
     { id: "level", section: "Section 1: Backgrounds", label: "What is your current badminton skill level?", type: "single_choice", required: true, allowOther: true, options: ["Beginner", "Intermediate", "Advanced", "Competitive / Club / School Team", "Coach / Assistant Coach", "Not sure"] },
@@ -17,11 +20,11 @@ window.BADMINTON_SCHEMA = {
     { id: "product_interest", section: "Section 4: Product Concept Interest", label: "How interested would you be in this type of badminton motion-analysis product?", type: "single_choice", required: true, allowOther: false, options: ["Very interested", "Somewhat interested", "Neutral / Not sure", "Not very interested", "Not interested at all"] },
     { id: "useful_features", section: "Section 4: Product Concept Interest", label: "Which product features would be most useful to you?", type: "multiple_choice", required: true, allowOther: true, options: ["Overall technique score", "Stroke-by-stroke analysis", "Consistency score", "Wrist speed / swing speed", "Comparison with skilled players", "Simple training suggestions", "Long-term progress charts"] },
     { id: "desired_feedback", section: "Section 4: Product Concept Interest", label: "What kind of feedback would you most want to receive?", type: "multiple_choice", required: true, allowOther: true, options: ["Whether my movement is technically correct", "How my movement differs from skilled players", "Which part of my stroke needs improvement", "Which stroke was my best", "How stable or consistent my movement is", "How I should practice next"] },
-    { id: "usage_timing", section: "Section 4: Product Concept Interest", label: "When would you most likely use this type of product?", type: "multiple_choice", required: true, allowOther: true, options: ["During self-practice", "During coaching sessions", "After training for review", "When learning a new stroke", "Before or after matches", "I am not sure", "I would not use this type of product, because: ____"] },
+    { id: "usage_timing", section: "Section 4: Product Concept Interest", label: "When would you most likely use this type of product?", type: "multiple_choice", required: true, allowOther: true, inlineTextOption: "I would not use this type of product, because:", options: ["During self-practice", "During coaching sessions", "After training for review", "When learning a new stroke", "Before or after matches", "I am not sure"] },
     { id: "product_concerns", section: "Section 4: Product Concept Interest", label: "What are your biggest concerns about this type of product?", type: "multiple_choice", required: true, allowOther: true, options: ["Accuracy", "Hard to understand the feedback", "Wearing a device may be inconvenient", "The device may affect my swing or playing feeling", "Price", "I would rather ask a coach", "Data privacy", "I am not interested in training data"] },
     { id: "comments", section: "Section 6: Open Feedback & Follow-up", label: "Do you have any suggestions or comments about this idea?", type: "long_text", required: false, allowOther: false, options: [] },
     { id: "follow_up_willingness", section: "Section 6: Open Feedback & Follow-up", label: "Would you be willing to join a short follow-up interview or future product test?", type: "single_choice", required: true, allowOther: false, options: ["Yes", "Maybe", "No"] },
-    { id: "contact", section: "Section 6: Open Feedback & Follow-up", label: "If yes or maybe, please leave your contact information.", description: "Your contact information will only be used for follow-up interviews or future product testing.", type: "contact", required: false, allowOther: false, options: [] }
+    { id: "contact", section: "Section 6: Open Feedback & Follow-up", label: "If yes or maybe, please leave your contact information.", description: "(Your contact information will only be used for follow-up interviews or future product testing.)", type: "contact", required: false, allowOther: false, conditionalOn: { questionId: "follow_up_willingness", values: ["Yes", "Maybe"] }, options: [] }
   ]
 };
 
