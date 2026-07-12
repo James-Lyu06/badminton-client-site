@@ -1,6 +1,10 @@
 # Badminton Client Site
 
-Public questionnaire site for badminton test participants.
+Public bilingual questionnaire for badminton test participants.
+
+## Questionnaire scope
+
+The survey covers participant background, training pain points, current training methods, a short product concept, and optional follow-up contact details.
 
 ## Deploy
 
@@ -10,5 +14,10 @@ Public questionnaire site for badminton test participants.
 
 ## Database
 
-This site submits to Supabase when `config.js` contains `SUPABASE_URL` and `SUPABASE_ANON_KEY`.
-If those values are blank, it runs in local demo mode only.
+The site submits to Supabase using the public project URL and publishable/anon key in `config.js`. If those values are blank, submissions are stored in the browser as local demo data only.
+
+Before sharing the questionnaire publicly, enable Row Level Security on `badminton_submissions`. The public role should only receive the minimum insert permission required by the form. Do not grant anonymous read, update, or delete access to questionnaire submissions.
+
+## Privacy
+
+The questionnaire may collect contact details when a participant opts into follow-up research. The QR-code page currently uses `api.qrserver.com`, which receives the public questionnaire URL in order to generate the image.
