@@ -1,12 +1,7 @@
 window.BADMINTON_SCHEMA = {
   title: "Badminton Motion-Analysis Product Survey",
   version: "2026-07-11-product-survey",
-  sectionDescriptions: {
-    "Section 4: Product Concept Interest": {
-      title: "Product Concept",
-      text: "Our idea is to use a wearable motion sensor attached to the elbow to analyze your badminton performance. The system may compare your movement with skilled players and provide feedback such as technique scores, consistency, wrist speed, and training suggestions."
-    }
-  },
+  sectionDescriptions: {},
   questions: [
     { id: "level", section: "Section 1: Backgrounds", label: "What is your current badminton skill level?", type: "single_choice", required: true, allowOther: true, options: ["Beginner", "Intermediate", "Advanced", "Competitive / Club / School Team", "Coach / Assistant Coach", "Not sure"] },
     { id: "frequency", section: "Section 1: Backgrounds", label: "How often do you usually play badminton?", type: "single_choice", required: true, allowOther: true, options: ["Less than once per month", "1–3 times per month", "Once per week", "2–3 times per week", "4+ times per week"] },
@@ -17,9 +12,9 @@ window.BADMINTON_SCHEMA = {
     { id: "training_methods", section: "Section 3: Current Training Methods", label: "What tools or methods do you currently use to improve your badminton skills?", type: "multiple_choice", required: true, allowOther: true, options: ["Coach lessons", "Watching online tutorials", "Watching professional players", "Recording videos of myself", "Asking friends for feedback", "Training with a club / team", "Practicing drills by myself", "I do not use any specific method"] },
     { id: "usual_feedback", section: "Section 3: Current Training Methods", label: "What kind of feedback do you usually want to receive?", type: "multiple_choice", required: true, allowOther: true, options: ["Technical feedback from a coach", "Suggestions from friends or teammates", "Video-based feedback", "Self-feeling during practice or match", "I rarely receive any feedback"] },
     { id: "current_satisfaction", section: "Section 3: Current Training Methods", label: "How satisfied are you with your current way of improving badminton skills?", type: "single_choice", required: true, allowOther: false, options: ["Very satisfied", "Somewhat satisfied", "Neutral / Not sure", "Somewhat dissatisfied", "Very dissatisfied"] },
-    { id: "comments", section: "Section 5: Open Feedback & Follow-up", label: "Do you have any suggestions or comments about this idea?", type: "long_text", required: false, allowOther: false, options: [] },
-    { id: "follow_up_willingness", section: "Section 5: Open Feedback & Follow-up", label: "Would you be willing to join the future product test?", type: "single_choice", required: true, allowOther: false, options: ["Yes", "Maybe", "No"] },
-    { id: "contact", section: "Section 5: Open Feedback & Follow-up", label: "If yes or maybe, please leave your contact information.", description: "(Your contact information will only be used for follow-up interviews or future product testing.)", type: "contact", required: false, allowOther: false, conditionalOn: { questionId: "follow_up_willingness", values: ["Yes", "Maybe"] }, options: [] }
+    { id: "comments", section: "Section 4: Open Feedback & Follow-up", label: "Do you have any suggestions or comments about this idea?", type: "long_text", required: false, allowOther: false, options: [] },
+    { id: "follow_up_willingness", section: "Section 4: Open Feedback & Follow-up", label: "Would you be willing to join the future product test?", type: "single_choice", required: true, allowOther: false, options: ["Yes", "Maybe", "No"] },
+    { id: "contact", section: "Section 4: Open Feedback & Follow-up", label: "If yes or maybe, please leave your contact information.", description: "(Your contact information will only be used for follow-up interviews or future product testing.)", type: "contact", required: false, allowOther: false, conditionalOn: { questionId: "follow_up_willingness", values: ["Yes", "Maybe"] }, options: [] }
   ]
 };
 

@@ -22,7 +22,7 @@ window.BADMINTON_ZH = {
   "Section 2: Training Pain Points": "第二部分：训练痛点",
   "Section 3: Current Training Methods": "第三部分：目前的训练方式",
   "Section 4: Product Concept Interest": "第四部分：产品概念兴趣",
-  "Section 5: Open Feedback & Follow-up": "第六部分：开放反馈与后续联系",
+  "Section 4: Open Feedback & Follow-up": "第六部分：开放反馈与后续联系",
   "Product Concept": "产品概念",
   "Our idea is to use a wearable motion sensor attached to the elbow to analyze your badminton performance. The system may compare your movement with skilled players and provide feedback such as technique scores, consistency, wrist speed, and training suggestions.": "我们的想法是使用佩戴在手肘处的动作传感器来分析你的羽毛球表现。系统可以将你的动作与高水平选手进行比较，并提供技术评分、稳定性、手腕速度和训练建议等反馈。",
   "What is your current badminton skill level?": "你目前的羽毛球水平是？",
