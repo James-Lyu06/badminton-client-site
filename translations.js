@@ -40,7 +40,7 @@ window.BADMINTON_ZH = {
   "When would you most likely use this type of product?": "你最有可能在什么时候使用这类产品？",
   "What are your biggest concerns about this type of product?": "你对这类产品最大的顾虑是什么？",
   "Do you have any suggestions or comments about this idea?": "你对这个想法有什么建议或意见吗？",
-  "Would you be willing to join a short follow-up interview or future product test?": "你愿意参加简短的后续访谈或未来的产品测试吗？",
+  "Would you be willing to join the future product test?": "你愿意参加未来的产品测试吗？",
   "If yes or maybe, please leave your contact information.": "如果选择“愿意”或“可能愿意”，请留下你的联系方式。",
   "(Your contact information will only be used for follow-up interviews or future product testing.)": "（你的联系方式只会用于后续访谈或未来的产品测试。）",
   "Beginner": "初学者", "Intermediate": "中级", "Advanced": "高级",
