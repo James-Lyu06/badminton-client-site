@@ -36,12 +36,47 @@ function groupBySection(questions) {
   }, {});
 }
 
-function renderClientForm() {
+function captureFormState() {
+  return [...clientForm.elements]
+    .filter(field => field.name)
+    .map(field => ({
+      name: field.name,
+      type: field.type,
+      value: field.value,
+      checked: field.checked
+    }));
+}
+
+function restoreFormState(state) {
+  state.forEach(saved => {
+    const fields = [...clientForm.elements].filter(field => field.name === saved.name);
+    fields.forEach(field => {
+      if (field.type === "radio" || field.type === "checkbox") {
+        if (field.value === saved.value) field.checked = saved.checked;
+      } else {
+        field.value = saved.value;
+      }
+    });
+  });
+}
+
+function sectionNumber(name) {
+  return Number(name.match(/Section (\d+)/)?.[1] || Number.MAX_SAFE_INTEGER);
+}
+
+function renderClientForm(formState = []) {
   renderStaticText();
   document.querySelector("#questionCount").textContent = currentLang === "zh" ? `${schema.questions.length} ${tr("questions")}` : `${schema.questions.length} questions`;
   clientForm.innerHTML = "";
 
-  Object.entries(groupBySection(schema.questions)).forEach(([sectionName, questions]) => {
+  const groupedQuestions = groupBySection(schema.questions);
+  const sectionNames = [...new Set([
+    ...Object.keys(groupedQuestions),
+    ...Object.keys(schema.sectionDescriptions || {})
+  ])].sort((a, b) => sectionNumber(a) - sectionNumber(b));
+
+  sectionNames.forEach(sectionName => {
+    const questions = groupedQuestions[sectionName] || [];
     const section = document.createElement("section");
     section.className = "formSection";
 
@@ -67,8 +102,12 @@ function renderClientForm() {
 
   const submit = document.createElement("button");
   submit.type = "submit";
+  submit.dataset.submitButton = "true";
   submit.textContent = tr("Submit answers");
   clientForm.appendChild(submit);
+
+  restoreFormState(formState);
+  initializeRequiredMultipleChoiceValidation();
   updateConditionalQuestions();
 }
 
@@ -131,6 +170,30 @@ function questionTypeHint(question) {
     contact: "Optional written answer"
   };
   return tr(hints[question.type] || "Answer");
+}
+
+function validateRequiredMultipleChoices() {
+  let valid = true;
+  schema.questions
+    .filter(question => question.required && question.type === "multiple_choice")
+    .forEach(question => {
+      const inputs = [...clientForm.querySelectorAll(`input[name="${question.id}"]`)];
+      const groupValid = inputs.some(input => input.checked);
+      if (inputs[0]) inputs[0].setCustomValidity(groupValid ? "" : tr("Please select at least one option."));
+      valid = groupValid && valid;
+    });
+  return valid;
+}
+
+function initializeRequiredMultipleChoiceValidation() {
+  schema.questions
+    .filter(question => question.required && question.type === "multiple_choice")
+    .forEach(question => {
+      clientForm.querySelectorAll(`input[name="${question.id}"]`).forEach(input => {
+        input.addEventListener("change", validateRequiredMultipleChoices);
+      });
+    });
+  validateRequiredMultipleChoices();
 }
 
 function inputElement(type, name, placeholder = "") {
@@ -221,8 +284,23 @@ function collectAnswers() {
   return answers;
 }
 
+let isSubmitting = false;
+
+function closeSuccessModal() {
+  successModal.classList.remove("show");
+  clientForm.querySelector("[data-submit-button]")?.focus();
+}
+
 clientForm.addEventListener("submit", async event => {
   event.preventDefault();
+  if (isSubmitting || !validateRequiredMultipleChoices()) {
+    clientForm.reportValidity();
+    return;
+  }
+
+  const submitButton = clientForm.querySelector("[data-submit-button]");
+  isSubmitting = true;
+  submitButton.disabled = true;
   try {
     await BadmintonData.createSubmission({
       id: BadmintonData.uid(),
@@ -234,18 +312,28 @@ clientForm.addEventListener("submit", async event => {
     clientForm.reset();
     updateConditionalQuestions();
     successModal.classList.add("show");
+    document.querySelector("#closeSuccessModal").focus();
     showToast(tr("Submitted successfully."));
   } catch (error) {
     console.error(error);
     showToast(tr("Submission failed. Please tell the researcher."));
+  } finally {
+    isSubmitting = false;
+    submitButton.disabled = false;
   }
 });
 
-document.querySelector("#closeSuccessModal").addEventListener("click", () => successModal.classList.remove("show"));
+document.querySelector("#closeSuccessModal").addEventListener("click", closeSuccessModal);
+successModal.addEventListener("click", event => {
+  if (event.target === successModal) closeSuccessModal();
+});
+document.addEventListener("keydown", event => {
+  if (event.key === "Escape" && successModal.classList.contains("show")) closeSuccessModal();
+});
 languageToggle.addEventListener("click", () => {
+  const formState = captureFormState();
   currentLang = currentLang === "en" ? "zh" : "en";
   localStorage.setItem("badminton_client_lang", currentLang);
-  renderClientForm();
+  renderClientForm(formState);
 });
 renderClientForm();
-
