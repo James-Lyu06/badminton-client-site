@@ -178,11 +178,25 @@ function validateRequiredMultipleChoices() {
     .filter(question => question.required && question.type === "multiple_choice")
     .forEach(question => {
       const inputs = [...clientForm.querySelectorAll(`input[name="${question.id}"]`)];
-      const groupValid = inputs.some(input => input.checked);
+      const groupValid = selectedMultipleChoiceValues(question).length > 0;
       if (inputs[0]) inputs[0].setCustomValidity(groupValid ? "" : tr("Please select at least one option."));
       valid = groupValid && valid;
     });
   return valid;
+}
+
+function selectedMultipleChoiceValues(question) {
+  return [...clientForm.querySelectorAll(`input[name="${question.id}"]:checked`)].map(input => {
+    if (input.value === BadmintonData.OTHER_VALUE) {
+      const other = clientForm.elements[`${question.id}_other`]?.value.trim() || "";
+      return other ? `Other: ${other}` : "";
+    }
+    if (input.value === "__INLINE_TEXT__") {
+      const inline = clientForm.elements[`${question.id}_inline`]?.value.trim() || "";
+      return inline ? `${question.inlineTextOption} ${inline}`.trim() : "";
+    }
+    return input.value;
+  }).filter(Boolean);
 }
 
 function initializeRequiredMultipleChoiceValidation() {
@@ -260,16 +274,18 @@ function updateConditionalQuestions() {
 
 function collectAnswers() {
   const data = new FormData(clientForm);
-  const answers = {};
+  // Store the exact schema used by this response. The admin site can then render
+  // future client-side questionnaire changes without requiring a matching deploy.
+  const answers = {
+    _questionnaire: JSON.parse(JSON.stringify({
+      title: schema.title,
+      version: schema.version,
+      questions: schema.questions.map(({ id, label, type, section }) => ({ id, label, type, section }))
+    }))
+  };
   schema.questions.forEach(question => {
     if (question.type === "multiple_choice") {
-      const other = data.get(`${question.id}_other`)?.trim();
-      const inline = data.get(`${question.id}_inline`)?.trim();
-      answers[question.id] = data.getAll(question.id).map(value => {
-        if (value === BadmintonData.OTHER_VALUE) return `Other: ${other}`;
-        if (value === "__INLINE_TEXT__") return `${question.inlineTextOption} ${inline}`.trim();
-        return value;
-      }).filter(value => !value.endsWith(":") && value !== "Other: ");
+      answers[question.id] = selectedMultipleChoiceValues(question);
     } else if (question.type === "contact") {
       answers[question.id] = {
         name: data.get(`${question.id}_name`) || "",
@@ -293,7 +309,10 @@ function closeSuccessModal() {
 
 clientForm.addEventListener("submit", async event => {
   event.preventDefault();
-  if (isSubmitting || !validateRequiredMultipleChoices()) {
+  const requiredMultipleChoicesComplete = schema.questions
+    .filter(question => question.required && question.type === "multiple_choice")
+    .every(question => selectedMultipleChoiceValues(question).length > 0);
+  if (isSubmitting || !validateRequiredMultipleChoices() || !requiredMultipleChoicesComplete) {
     clientForm.reportValidity();
     return;
   }
@@ -337,3 +356,4 @@ languageToggle.addEventListener("click", () => {
   renderClientForm(formState);
 });
 renderClientForm();
+
